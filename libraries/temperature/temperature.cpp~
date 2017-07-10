@@ -1,0 +1,36 @@
+#include "temperature.h"
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+Temperature::Temperature(uint8_t tempSensorPin) {
+  _tempSensorPin = tempSensorPin;
+  _oneWire = new OneWire(_tempSensorPin);
+  _dallas = new DallasTemperature(_oneWire);
+
+  _dallas->begin();
+  _dallas->setResolution(12);
+  _dallas->setWaitForConversion(false);
+}
+
+Temperature::~Temperature() {
+  delete _dallas;
+  delete _oneWire;
+}
+
+void Temperature::requestTempAsync(void) {
+  _dallas->requestTemperatures();
+}
+
+uint8_t Temperature::getSensorCount(void) {
+  return _dallas->getDeviceCount();
+}
+
+double Temperature::getTemperature(uint8_t sensorIndex) {
+  if (_dallas->isConversionComplete()) {
+    double temp = _dallas->getTempCByIndex(sensorIndex);
+    this->requestTempAsync();
+    return temp;
+  }
+
+  return this->_temp;
+}

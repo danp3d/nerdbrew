@@ -2,6 +2,7 @@
 Arduino-based beer brewing automation
 
 # Schematics
+![schematics](https://github.com/danp3d/nerdbrew/blob/master/sketch.png)
 
 ## Connections
 ### LCD
